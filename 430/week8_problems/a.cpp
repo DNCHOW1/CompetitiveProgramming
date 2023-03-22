@@ -50,8 +50,38 @@ ll MOD1 = 1e9 + 7;
 //    Because m is multiplied by (2/3)^k, it has a certain amount of levels. That means that paths you take can
 //    converge at some dp[i][m'], which means at this state you take the max!
 //    NOTE: This is why the recursive solution also works
+// * When implementing solution, FORGOT ABOUT LEVEL==0 should account for dp[i-2][0]
 
+// dp[i][0] = max{dp[i-3][...]} + min(levels[0], cal[i]) (WHEN LEVEL == 0)
+// dp[i][level] = max{dp[i-2][level], dp[i-1][level-1]} + min(levels[level], cal[i]) (WHEN LEVEL != 0)
 int main(){
-    
+    ll n, m; cin >> n >> m;
+    ll temp = m;
+    v64 levels;
+    while(temp){
+        levels.pb(temp);
+        temp = temp*2/3;
+    }
+
+    v64 calories(n);
+    vv64 dp(n+4, v64(levels.size()+1));
+    for(ll i = 0; i < n; i++) cin >> calories[i];
+
+    // Trying out tabulation
+    for(ll i = 3; i <= n+3; i++){
+        for(ll level = 0; level < dp[0].size(); level++){
+            if(level == 0){
+                for(ll tmp = 0; tmp < dp[0].size(); tmp++) dp[i][level] = max(dp[i][level], dp[i-3][tmp]);
+                dp[i][level] = max(dp[i][level], dp[i-2][level]);
+            } else{
+                dp[i][level] = max(dp[i-2][level], dp[i-1][level-1]);
+            }
+            dp[i][level] += min(levels[level], calories[i-3]);
+        }
+    }
+
+    ll out = -1e9;
+    for(ll lvl = 0; lvl < dp[0].size(); lvl++) out = max(out, dp[n+2][lvl]);
+    cout << out << endl;
     return 0;
 }
