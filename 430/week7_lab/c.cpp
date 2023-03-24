@@ -38,50 +38,60 @@ ll INF = 2e18;
 ll MOD9 = 998244353;
 ll MOD1 = 1e9 + 7;
 
+// REFLECTIONS: Firetrucks are red
+// * Initially, I was stuck on the idea of 'for every person, check if every person and other in array'
+//  BUT, idea is WRONG!!! By just checking the adjacent, then as long as ONE OF THEM aren't in the set, YOU CAN USE!!!
 
+struct DSU {
+	vector<int> e;
+	DSU(int N) { e = vector<int>(N, -1); }
+
+	// get representive component (uses path compression)
+	int get(int x) { return e[x] < 0 ? x : e[x] = get(e[x]); }
+
+	bool same_set(int a, int b) { return get(a) == get(b); }
+
+	int size(int x) { return -e[get(x)]; }
+
+	bool unite(int x, int y) {  // union by size
+		x = get(x), y = get(y);
+		if (x == y) return false;
+		if (e[x] > e[y]) swap(x, y);
+		e[x] += e[y];
+		e[y] = x;
+		return true;
+	}
+};
 
 int main(){
     ll n; cin >> n;
-    map<ll, set<ll>> mapping;
-    vv64 mat;
-    vv64 out;
-    vector<set<ll>> used(n+1);
+    map<ll, v64> mapp;
+    DSU dsu(n+1);
     for(ll i = 1; i <= n; i++){
         ll m; cin >> m;
-        v64 arr(m);
         for(ll j = 0; j < m; j++){
             ll num; cin >> num;
-            mapping[num].insert(i);
-            used[i].insert(num);
+            mapp[num].pb(i);
         }
-        mat.pb(arr);
     }
 
-    for(ll i = 1; i <= n; i++){
-        for(auto num: mat[i-1]){
-            if(used[i].count(num) == 1){
-                
+    vv64 out;
+    for(auto& [num, people]: mapp){
+        for(auto i = 0; i < people.size()-1; i++){
+            if(!dsu.same_set(people[i], people[i+1])){
+                dsu.unite(people[i], people[i+1]);
+                out.pb({people[i], people[i+1], num});
             }
         }
     }
 
-    for(ll i = 1; i <= n; i++){
-        bool flag = false;
-        for(auto num: mat[i-1]){
-            if(mapping[num].size() > 1){
-                for(auto num2: mapping[num]){
-                    if(num2 != num){
-                        flag = true;
-                        out.pb({i, num2, num});
-                        mapping[num].erase(i);
-                        break;
-                    }
-                }
-            }
-            if(flag) break;
+    if(out.size() != n-1){
+        cout << "impossible" << endl;
+    } else{
+
+        for(auto o: out){
+            cout << o[0] << " " << o[1] << " " << o[2] << endl;
         }
     }
-
-
     return 0;
 }
