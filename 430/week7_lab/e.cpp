@@ -38,8 +38,11 @@ ll INF = 2e18;
 ll MOD9 = 998244353;
 ll MOD1 = 1e9 + 7;
 
+// REFLECTIONS:
+// In DP should not aim to iteratively improve a given state, BUT BE SURE IT'S THE OPTIMAL IMMEDIATELY
+//  This way in a top-down solution, you know you're sure that when prev state is used it's optimal
+
 void dfs(v64& cost, vv64& dp, int pos, int step, ll curr){
-// void dfs(v64& cost, v64& dp, int pos, int step, ll curr){
     if(pos >= cost.size() || pos < 0 || step >= cost.size() + 1){
         return;
     }
@@ -51,17 +54,32 @@ void dfs(v64& cost, vv64& dp, int pos, int step, ll curr){
     dfs(cost, dp, pos-step, step, curr); // backward
 }
 
+ll dfs2(v64& cost, vv64& dp, int pos, int step){
+    if(pos >= cost.size() || pos < 0) return 1e18;
+
+    if(dp[pos][step] != -1) return dp[pos][step];
+
+    dp[pos][step] = cost[pos] + min(dfs2(cost, dp, pos-step, step-1), dfs2(cost, dp, pos+step, step));
+    return dp[pos][step];
+}
+
 int main(){
     ll n; cin >> n;
     v64 cost(n);
-    // v64 dp(n+1, 10000000000000LL);
-    vv64 dp(n+1, v64(1005, 1e18));
-    for(int i = 0; i < n; i++) cin >> cost[i];
+    vv64 dp(n+1, v64(1005, -1));
+    for(int i = 0; i < n; i++) {
+        cin >> cost[i];
+        dp[i][0] = 1e18;
+    }
+    dp[0][0] = 0;
 
-    dfs(cost, dp, 1, 1, 0);
+    // dfs(cost, dp, 1, 1, 0);
+
+
     ll mn = 1e18;
-    for(int i = 0; i < 1004; i++){
-        mn = min(mn, dp[n-1][i]);
+    for(int i = 1; i < 1004; i++){
+        mn = min(mn, dfs2(cost, dp, n-1, i));
+        // mn = min(mn, dp[n-1][i]);
     }
     cout << mn << endl;
     return 0;
