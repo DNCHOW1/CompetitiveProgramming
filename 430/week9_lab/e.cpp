@@ -38,24 +38,38 @@ ll INF = 2e18;
 ll MOD9 = 998244353;
 ll MOD1 = 1e9 + 7;
 
-ll wagons[10005] = {};
 
-// return 0 if not possible
-bool greedy(ll w, ll split, ll l){ // # wagons, # of wagons to split, l is # of automobiles
-    
-}
-
-void solve(){
-    ll n, w, l; cin >> n >> w >> l; // # of wagons, # of wagons containing freight, # of locomotives
-    for(ll i = 0; i < w; i++) cin >> wagons[i];
-
-
-}
 
 int main(){
-    ll t; cin >> t;
-    while(t--){
-        solve();
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    ll n; cin >> n;
+
+    // The # of numbers > current number
+    ll tot = 0;
+    v64 arr(n);
+    for(ll i = 0; i < n; i++){
+        cin >> arr[i];
+        tot += arr[i];
+    }
+
+    ll I = -1, J = -1, curr = 0;
+    if(tot%3 != 0) cout << -1 << endl;
+    else{
+        for(ll i = 0; i < n; i++){
+            if(curr == tot/3) I = i;
+            curr += arr[i];
+        }
+        curr = 0;
+        for(ll j = I; j < n; j++){
+            if(curr == tot/3) J = j;
+            curr += arr[j];
+        }
+        if(I == -1 || J == -1){
+            cout << -1 << endl;
+        } else {
+            cout << I << " " << J << endl;
+        }
     }
     return 0;
 }

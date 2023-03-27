@@ -38,24 +38,28 @@ ll INF = 2e18;
 ll MOD9 = 998244353;
 ll MOD1 = 1e9 + 7;
 
-ll wagons[10005] = {};
 
-// return 0 if not possible
-bool greedy(ll w, ll split, ll l){ // # wagons, # of wagons to split, l is # of automobiles
-    
-}
-
-void solve(){
-    ll n, w, l; cin >> n >> w >> l; // # of wagons, # of wagons containing freight, # of locomotives
-    for(ll i = 0; i < w; i++) cin >> wagons[i];
-
-
-}
 
 int main(){
-    ll t; cin >> t;
-    while(t--){
-        solve();
+    ll m; cin >> m;
+    map<ll, ll> savvv;
+    ll limit = sqrt(m) + 1;
+    for(ll i = 1; i <= limit; i++){
+        for(ll j = i+1; j <= limit; j++){
+            ll tmp = (pow(i, 3)+pow(j, 3));
+            savvv[tmp]++;
+        }
     }
+
+    ll mx = -1e9;
+    for(auto& [num, amt]: savvv){
+        if(num > m) break;
+        if(amt >= 2) mx = num;
+    }
+
+    if(mx != -1e9)
+        cout << mx << endl;
+    else
+        cout << "none" << endl;
     return 0;
 }

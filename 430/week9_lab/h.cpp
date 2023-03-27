@@ -38,24 +38,44 @@ ll INF = 2e18;
 ll MOD9 = 998244353;
 ll MOD1 = 1e9 + 7;
 
-ll wagons[10005] = {};
 
-// return 0 if not possible
-bool greedy(ll w, ll split, ll l){ // # wagons, # of wagons to split, l is # of automobiles
-    
-}
-
-void solve(){
-    ll n, w, l; cin >> n >> w >> l; // # of wagons, # of wagons containing freight, # of locomotives
-    for(ll i = 0; i < w; i++) cin >> wagons[i];
-
-
-}
 
 int main(){
-    ll t; cin >> t;
-    while(t--){
-        solve();
+    ll n, m; cin >> n >> m;
+    v64 owe(n);
+    vv64 adj(n+1);
+    set<ll> visited;
+    for(ll i = 0; i < n; i++) cin >> owe[i];
+    for(ll i = 0; i < m; i++){
+        ll a, b; cin >> a >> b;
+        adj[a].pb(b);
+        adj[b].pb(a);
     }
+
+    for(ll i = 0; i < n; i++){
+        if(visited.count(i) == 0){
+            ll curr = 0;
+            queue<ll> q;
+            q.push(i);
+            visited.insert(i);
+            while(!q.empty()){
+                auto fr = q.front(); q.pop();
+                curr += owe[fr];
+                for(auto e: adj[fr]) {
+                    if(visited.count(e) == 0){
+
+                    q.push(e);
+                    visited.insert(e);
+                    }
+                }
+            }
+
+            if(curr != 0){
+                cout << "IMPOSSIBLE" << endl;
+                return 0;
+            }
+        }
+    }
+    cout << "POSSIBLE" << endl;
     return 0;
 }

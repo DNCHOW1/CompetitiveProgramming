@@ -38,24 +38,18 @@ ll INF = 2e18;
 ll MOD9 = 998244353;
 ll MOD1 = 1e9 + 7;
 
-ll wagons[10005] = {};
-
-// return 0 if not possible
-bool greedy(ll w, ll split, ll l){ // # wagons, # of wagons to split, l is # of automobiles
-    
-}
-
-void solve(){
-    ll n, w, l; cin >> n >> w >> l; // # of wagons, # of wagons containing freight, # of locomotives
-    for(ll i = 0; i < w; i++) cin >> wagons[i];
-
-
-}
-
 int main(){
-    ll t; cin >> t;
-    while(t--){
-        solve();
+    ll n; cin >> n;
+    ordered_set o_set;
+    ll tot = 0;
+    for(ll i = 0; i < n; i++){
+        ll num; cin >> num;
+        o_set.insert(num);
+        if(o_set.size() > 1){
+            auto order = o_set.order_of_key(num);    
+            tot += (o_set.size() - order - 1);
+        }
     }
+    cout << tot << endl;
     return 0;
 }

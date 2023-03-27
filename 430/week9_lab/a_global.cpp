@@ -38,24 +38,43 @@ ll INF = 2e18;
 ll MOD9 = 998244353;
 ll MOD1 = 1e9 + 7;
 
-ll wagons[10005] = {};
+v64 arr;
+vv64 dp(1e6+10, {-1, -1});
+ll n, m;
 
-// return 0 if not possible
-bool greedy(ll w, ll split, ll l){ // # wagons, # of wagons to split, l is # of automobiles
-    
-}
+ll dfs(ll stones, ll player){
+    if(stones < 0) return -1;
 
-void solve(){
-    ll n, w, l; cin >> n >> w >> l; // # of wagons, # of wagons containing freight, # of locomotives
-    for(ll i = 0; i < w; i++) cin >> wagons[i];
+    if(stones == 0) return (player == 1) ? 2 : 1;
+    else if(dp[stones][player-1] != -1) return dp[stones][player-1];
 
 
+    // run dfs top-down
+    for(ll i = 0; i < arr.size(); i++){
+        ll winner = dfs(stones-arr[i], (player == 1) ? 2 : 1);
+        if(winner != -1){
+            if(winner == player) dp[stones][player-1] = player;
+            else if(dp[stones][player-1] == -1) dp[stones][player-1] = winner;
+        }
+    }
+    return dp[stones][player-1];
 }
 
 int main(){
-    ll t; cin >> t;
-    while(t--){
-        solve();
+    while(cin >> n){
+        if(cin.eof()) break;
+        cin >> m;
+        arr = v64(m);
+        for(ll i = 0; i < m; i++){
+            cin >> arr[i];
+        }
+        sort(arr.begin(), arr.end());
+
+        // vv64 dp(n+5, {-1, -1});
+        for(ll i = 0; i <= n; i++) dp[i] = {-1, -1};
+        dfs(n, 1);
+
+        cout << dp[n][0] << endl;
     }
     return 0;
 }
