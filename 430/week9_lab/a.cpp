@@ -45,7 +45,6 @@ ll dfs(v64& arr, ll stones, ll player){
     // if(stones == 0) return (player == 1) ? 2 : 1;
     if(used[stones] == 1) return player;
     else if(dp[stones][player-1] != -1) return dp[stones][player-1];
-    // dp[stones] != {-1, -1}
 
     // run dfs top-down
     for(ll i = 0; i < arr.size(); i++){
@@ -73,12 +72,21 @@ int main(){
             cin >> arr[i];
             used[arr[i]] = 1;
         }
-        sort(arr.begin(), arr.end(), greater());
+        sort(arr.begin(), arr.end());
 
-        for(ll i = 0; i < n+5; i++) dp[i] = {-1, -1};
-        dfs(arr, n, 1);
+        dp[0] = {0, 0};
+        for(ll i = 1; i < n+5; i++) {
+            dp[i] = {0, 0};
+            for(auto num: arr){
+                if(i-num >= 0){
+                    dp[i][0] |= !dp[i-num][1];
+                    dp[i][1] |= !dp[i-num][0];
+                }
+            }
+        }
+        // dfs(arr, n, 1); // top-down solution, might be too slow?
 
-        for(auto num: arr) used[num] = 0;
+        // for(auto num: arr) used[num] = 0;
         if(dp[n][0] == 1) cout << "Stan wins" << endl;
         else cout << "Ollie wins" << endl;
     }
