@@ -1,0 +1,1 @@
+{"name":"Local: a","url":"/home/dienchau/CompetitiveProgramming/430/week10_problems/a.cpp","tests":[{"id":1680209763030,"input":"1\n2 4\n0 100\n0 300\n0 600\n150 750","output":"212.13"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/dienchau/CompetitiveProgramming/430/week10_problems/a.cpp","group":"local","local":true}
